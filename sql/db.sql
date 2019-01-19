@@ -1,0 +1,156 @@
+-- MySQL dump 10.13  Distrib 5.7.20, for Linux (x86_64)
+--
+-- Host: localhost    Database: dbproject_app
+-- ------------------------------------------------------
+-- Server version	5.7.20-0ubuntu0.16.04.1
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `AIMER`
+--
+
+DROP TABLE IF EXISTS `AIMER`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `AIMER` (
+  `IDTWEET` int(11) NOT NULL,
+  `IDUSER` int(11) NOT NULL,
+  `DATELIKE` datetime DEFAULT NULL,
+  `DATESEEN` datetime DEFAULT NULL,
+  PRIMARY KEY (`IDTWEET`,`IDUSER`),
+  KEY `FK_AIMER_UTILISATEUR` (`IDUSER`),
+  CONSTRAINT `AIMER_ibfk_1` FOREIGN KEY (`IDTWEET`) REFERENCES `TWITTER` (`IDTWEET`),
+  CONSTRAINT `AIMER_ibfk_2` FOREIGN KEY (`IDUSER`) REFERENCES `UTILISATEUR` (`IDUSER`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `CONCERNER`
+--
+
+DROP TABLE IF EXISTS `CONCERNER`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `CONCERNER` (
+  `IDTWEET` int(11) NOT NULL,
+  `IDHASHTAG` int(11) NOT NULL,
+  PRIMARY KEY (`IDTWEET`,`IDHASHTAG`),
+  KEY `FK_CONCERNER_HASHTAG` (`IDHASHTAG`),
+  CONSTRAINT `CONCERNER_ibfk_1` FOREIGN KEY (`IDTWEET`) REFERENCES `TWITTER` (`IDTWEET`),
+  CONSTRAINT `CONCERNER_ibfk_2` FOREIGN KEY (`IDHASHTAG`) REFERENCES `HASHTAG` (`IDHASHTAG`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `HASHTAG`
+--
+
+DROP TABLE IF EXISTS `HASHTAG`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `HASHTAG` (
+  `IDHASHTAG` int(11) NOT NULL AUTO_INCREMENT,
+  `NOMTAG` char(32) DEFAULT NULL,
+  `DATETAG` date DEFAULT NULL,
+  PRIMARY KEY (`IDHASHTAG`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `MENTION`
+--
+
+DROP TABLE IF EXISTS `MENTION`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `MENTION` (
+  `IDUSER` int(11) NOT NULL,
+  `IDTWEET` int(11) NOT NULL,
+  `DATEMENTION` datetime DEFAULT NULL,
+  `DATESEEN` datetime DEFAULT NULL,
+  PRIMARY KEY (`IDUSER`,`IDTWEET`),
+  KEY `FK_MENTION_TWITTER` (`IDTWEET`),
+  CONSTRAINT `MENTION_ibfk_1` FOREIGN KEY (`IDUSER`) REFERENCES `UTILISATEUR` (`IDUSER`),
+  CONSTRAINT `MENTION_ibfk_2` FOREIGN KEY (`IDTWEET`) REFERENCES `TWITTER` (`IDTWEET`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `SUIVRE`
+--
+
+DROP TABLE IF EXISTS `SUIVRE`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `SUIVRE` (
+  `IDUSER_SUIVRE` int(11) NOT NULL,
+  `IDUSER_ABONNE` int(11) NOT NULL,
+  `DATESUIVRE` datetime DEFAULT NULL,
+  `DATESEEN` datetime DEFAULT NULL,
+  PRIMARY KEY (`IDUSER_SUIVRE`,`IDUSER_ABONNE`),
+  KEY `FK_SUIVRE_UTILISATEUR1` (`IDUSER_ABONNE`),
+  CONSTRAINT `SUIVRE_ibfk_1` FOREIGN KEY (`IDUSER_SUIVRE`) REFERENCES `UTILISATEUR` (`IDUSER`),
+  CONSTRAINT `SUIVRE_ibfk_2` FOREIGN KEY (`IDUSER_ABONNE`) REFERENCES `UTILISATEUR` (`IDUSER`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `TWITTER`
+--
+
+DROP TABLE IF EXISTS `TWITTER`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `TWITTER` (
+  `IDTWEET` int(11) NOT NULL AUTO_INCREMENT,
+  `IDUSER` int(11) NOT NULL,
+  `REPONDRE` int(11) DEFAULT NULL,
+  `TEXT` char(255) DEFAULT NULL,
+  `PUBLICDATE` datetime DEFAULT NULL,
+  PRIMARY KEY (`IDTWEET`),
+  KEY `FK_TWITTER_UTILISATEUR` (`IDUSER`),
+  KEY `FK_TWITTER_TWITTER` (`REPONDRE`),
+  CONSTRAINT `TWITTER_ibfk_1` FOREIGN KEY (`IDUSER`) REFERENCES `UTILISATEUR` (`IDUSER`),
+  CONSTRAINT `TWITTER_ibfk_2` FOREIGN KEY (`REPONDRE`) REFERENCES `TWITTER` (`IDTWEET`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `UTILISATEUR`
+--
+
+DROP TABLE IF EXISTS `UTILISATEUR`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `UTILISATEUR` (
+  `IDUSER` int(11) NOT NULL AUTO_INCREMENT,
+  `NOMUSER` char(32) NOT NULL,
+  `PRENOM` char(32) DEFAULT NULL,
+  `INSCRIDATE` date DEFAULT NULL,
+  `EMAIL` char(255) DEFAULT NULL,
+  `PASSWORD` char(32) DEFAULT NULL,
+  `AVATAR` char(50) DEFAULT NULL,
+  PRIMARY KEY (`IDUSER`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2018-01-21  3:45:19
