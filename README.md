@@ -1,2 +1,2 @@
 # DI3-S5-Twitter
-This is projet of the lesson Database .
+This is the projet of the course Database .
